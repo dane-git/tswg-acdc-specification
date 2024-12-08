@@ -492,7 +492,6 @@ The schema for the Compact public ACDC example above is provided below.
   [
     "v",
     "d",
-    "u",
     "i",
     "rd",
     "s",
@@ -1046,7 +1045,7 @@ Attribute section subschema:
           "d",
           "u",
           "i",
-          "name"
+          "name",
           "gpa",
           "grades"
         ],
@@ -1088,9 +1087,9 @@ Attribute section subschema:
                 [
                   "d",
                   "u",
-                  "history"
+                  "history",
                   "english",
-                  "math"
+                  "math",
                 ],
                 "properties":
                 {
@@ -1143,7 +1142,7 @@ Partially disclosed Attribute section:
     "d": "EBf7V_NHwY1lkFrn9y2PYgveY4-9XgOcLxUderzwLIr9",
     "u": "0ADAE0qHcgNghkDaG7OY1wja",
     "i": "EFv7vklXKhzBrAqjsKAn2EDIPmkPreYApZfFk66jpf3u",
-    "name": "Jane Doe"
+    "name": "Jane Doe",
     "gpa": 3.50,
     "grades": "EBf7V_NHwY1lkFrn9y2PYgveY4-9XgOcLxUderzwLIr9"
   }
@@ -2614,8 +2613,8 @@ To elaborate, exploitation based on disclosure is characterized by a Three-party
 Typically, protection from direct 3rd-party (Observer) exploitation without the collusion of the 2nd-party (Disclosee) of disclosed data may be provided by encrypting that data such that only the 2nd-party (Disclosee) may decrypt that data. Encryption is one effective mechanism for protecting the confidentiality of disclosed data from non-collusive 3rd-party observation. The detailed description of such mechanisms that are compatible with ACDCs is beyond the scope of this specification. See [SPAC](https://github.com/SmithSamuelM/Papers/blob/master/whitepapers/SPAC_Message.pdf) and {{TSP}} compatible encryption protocols. 
 
 The primary mechanisms by which 2nd parties (Disclosees) erode the data privacy rights of disclosed data are as follows:
-	•	Exploitive use of 1st-party (Discloser) data by 2nd parties (Disclosees).
-	•	Sharing of 1st-party (Discloser) data by 2nd parties (Disclosees) with 3rd parties (Observers) either overtly (collusive) or inadvertently (leakage).
+  •	Exploitive use of 1st-party (Discloser) data by 2nd parties (Disclosees).
+  •	Sharing of 1st-party (Discloser) data by 2nd parties (Disclosees) with 3rd parties (Observers) either overtly (collusive) or inadvertently (leakage).
 
 ::: issue
 This model is diagrammed below. 
@@ -3796,7 +3795,6 @@ The Schema, `s` field value is the expanded Schema section from the associated A
     [
       "v",
       "d",
-      "u",
       "i",
       "rd",
       "s",
