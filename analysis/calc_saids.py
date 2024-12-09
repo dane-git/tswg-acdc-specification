@@ -34,7 +34,7 @@ def calculate_blake3_256(file_path):
     Calculate the BLAKE3 256-bit hash of a file.
 
     :param file_path: Path to the file.
-    :return: Hexadecimal hash of the file.
+    :return: Digest
     """
     try:
         hasher = blake3.blake3()
@@ -308,8 +308,8 @@ for ind, k in enumerate(blocks):
     if '$id' in data:
         
       saidified = saidify.saidify(data, label='$id', compactify=True)
-      blocks[k]['basic_said']  = saidified['version_1_said_calc']
-      blocks[k]['compact_said']  = saidified['final_said']
+      blocks[k]['basic_said']  = saidified['said_v1']
+      blocks[k]['compact_said']  = saidified['said']
       all_paths = saidified['paths']
       sads = saidified['sads']
       full = saidify.construct_partial(all_paths, sads,  saidified['label'])
@@ -322,8 +322,8 @@ for ind, k in enumerate(blocks):
     if 'd' in data:
       # said, _ =  saidify.saidify(data,  compactify = True)
       saidified = saidify.saidify(data, compactify=True)
-      blocks[k]['basic_said']  = saidified['version_1_said_calc']
-      blocks[k]['compact_said']  = saidified['final_said']
+      blocks[k]['basic_said']  = saidified['said_v1']
+      blocks[k]['compact_said']  = saidified['said']
       blocks[k]['full'] = saidified['non_compact']
   
     elif dict_has_key(flat_keys,'d')[0]:
@@ -333,15 +333,10 @@ for ind, k in enumerate(blocks):
             temp_k = list(_dict.keys())[0]
             temp = _dict[temp_k]
             saidified = saidify.saidify(temp,  compactify=True)
-            blocks[k]['basic_said']  = saidified['version_1_said_calc']
-            blocks[k]['compact_said']  = saidified['final_said']
+            blocks[k]['basic_said']  = saidified['said_v1']
+            blocks[k]['compact_said']  = saidified['said']
             blocks[k]['full'] = saidified['non_compact']
         else:
-            for p in match_paths:
-                print(337)
-                print(p)
-            # print(match_paths)
-            # for level in levels:
             blocks[k]['sads'] = []
             for p in match_paths:
                 # _, level = dict_has_key(flat_keys,'d')
