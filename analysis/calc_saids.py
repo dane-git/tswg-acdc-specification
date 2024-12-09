@@ -258,6 +258,8 @@ def list_contains_substring_list(_list, sub_list):
 def dict_has_key(keyList, k):
     # keyList = _list.split('.')
     all_keys = []
+    levels = []
+    
     for _k in keyList:
         if '.' in _k:
             # print('split', _k)
@@ -267,10 +269,24 @@ def dict_has_key(keyList, k):
                 all_keys.append([ke, level])
         else:
             all_keys.append([_k, 0])
+    match_paths = []
+    match_path = []
+    last_level  = -1
     for elem, level in all_keys:
+        if level <= last_level:
+            match_path = []
+        # print(elem, level)
+        # print(elem)
+        match_path.append(elem)
         if k == elem:
-            return True, level
-    return False, -1
+            match_paths.append(match_path)
+            
+            levels.append(level)
+        last_level = level
+    levels = list(set(levels))
+    if len(levels) > 0:
+        return True, levels, match_paths
+    return False, [], []
     
 saidify_exclude = ['$schema', '$id', 'properties', 'oneOf']
 
@@ -308,22 +324,36 @@ for ind, k in enumerate(blocks):
       saidified = saidify.saidify(data, compactify=True)
       blocks[k]['basic_said']  = saidified['version_1_said_calc']
       blocks[k]['compact_said']  = saidified['final_said']
+      blocks[k]['full'] = saidified['non_compact']
   
     elif dict_has_key(flat_keys,'d')[0]:
-        
-      _, level = dict_has_key(flat_keys,'d')
+        _,levels, match_paths = dict_has_key(flat_keys,'d')
+        if 1 in levels:
+            _dict= deepcopy(data)
+            temp_k = list(_dict.keys())[0]
+            temp = _dict[temp_k]
+            saidified = saidify.saidify(temp,  compactify=True)
+            blocks[k]['basic_said']  = saidified['version_1_said_calc']
+            blocks[k]['compact_said']  = saidified['final_said']
+            blocks[k]['full'] = saidified['non_compact']
+        else:
+            for p in match_paths:
+                print(337)
+                print(p)
+            # print(match_paths)
+            # for level in levels:
+            blocks[k]['sads'] = []
+            for p in match_paths:
+                # _, level = dict_has_key(flat_keys,'d')
+                # print('level', level)
+                _dict= deepcopy(data)
+                # print(flat_keys)
+                this = _dict
+                for nest_k in p[:-1]:
+                    this = this[to_int(nest_k)]
+                saidified = saidify.saidify(this,  compactify=True)
+                blocks[k]['sads'].append(('.'.join(p[:-1]), saidified['non_compact']))
 
-      _dict= deepcopy(data)
-      nest_k = flat_keys[0].split('.')
-      this = _dict
-      
-      for i in range(level):
-        this_key = to_int(nest_k[i])
-        _path.append(this_key)
-        this = this[this_key]
-
-      saidified = saidify.saidify(this,  compactify=True)
-      blocks[k]['compact_said']  = saidified['final_said']
     if len(saidified['paths']) > 1:
       all_paths = saidified['paths']
       sads = saidified['sads']
