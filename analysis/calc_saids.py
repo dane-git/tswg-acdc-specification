@@ -126,12 +126,17 @@ run_time = int(time())
 
 calculations = {}
 meta  = {
-  'd': f'{"#"*44}', 
+  'd': f'{"#"*44}',
   'run_time': run_time,
-  'file_sha256': file_sha256,
-  **file_info,
-  'raw_b64': raw_b64,
+  'file': {
+    'd': f'{"#"*44}', 
+    'file_sha256': file_sha256,
+    **file_info,
+    'raw': {
+        'raw_b64': raw_b64,
+    }
   }
+}
 print(meta['d'])
 
 
@@ -314,6 +319,7 @@ for ind, k in enumerate(blocks):
       sads = saidified['sads']
       full = saidify.construct_partial(all_paths, sads,  saidified['label'])
       blocks[k]['full'] = full
+      blocks[k]['sads'] = sads
     if list_contains_substring_list(flattened,saidify_exclude):
       continue
     flat_keys = list(flattened.keys())
@@ -325,6 +331,7 @@ for ind, k in enumerate(blocks):
       blocks[k]['basic_said']  = saidified['said_v1']
       blocks[k]['compact_said']  = saidified['said']
       blocks[k]['full'] = saidified['non_compact']
+      blocks[k]['sads'] = saidified['sads']
   
     elif dict_has_key(flat_keys,'d')[0]:
         _,levels, match_paths = dict_has_key(flat_keys,'d')
@@ -336,8 +343,9 @@ for ind, k in enumerate(blocks):
             blocks[k]['basic_said']  = saidified['said_v1']
             blocks[k]['compact_said']  = saidified['said']
             blocks[k]['full'] = saidified['non_compact']
+            blocks[k]['sads'] = saidified['sads']
         else:
-            blocks[k]['sads'] = []
+            blocks[k]['sads'] = {}
             for p in match_paths:
                 # _, level = dict_has_key(flat_keys,'d')
                 # print('level', level)
@@ -347,7 +355,7 @@ for ind, k in enumerate(blocks):
                 for nest_k in p[:-1]:
                     this = this[to_int(nest_k)]
                 saidified = saidify.saidify(this,  compactify=True)
-                blocks[k]['sads'].append(('.'.join(p[:-1]), saidified['non_compact']))
+                blocks[k]['sads'][('.'.join(p[:-1]))] =  saidified['non_compact']
 
     if len(saidified['paths']) > 1:
       all_paths = saidified['paths']
@@ -355,6 +363,7 @@ for ind, k in enumerate(blocks):
       full = saidify.construct_partial(all_paths, sads, saidified['label'])
       blocks[k]['full'] = full
       blocks[k]['full_path'] = _path
+      blocks[k]['sads'] = saidified['sads']
         
 calculations['blocks'] = blocks
 _meta = saidify.saidify(meta, label='d', compactify=True)
