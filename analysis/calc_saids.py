@@ -10,6 +10,7 @@ from simple_said import saidify # https://github.com/dane-git/simple-said.git
 
 
 ROOT_FILE = '../spec/spec.md'
+ROOT_FILE = '../spec/spec.update.md'
 with open(ROOT_FILE, "r", encoding="utf-8") as file:
   DATA = file.read()
 
@@ -372,7 +373,32 @@ calculations['meta'] = meta
 # base64_to_file(meta['raw_b64'], 'test_file_convert.md')
 # print(calculations)
 outfile = f'./results/{str(run_time)}_said_calulations.json'
+def make_json_compatible(d):
+
+    if not isinstance(d, dict):
+        raise ValueError("Input must be a dictionary.")
+
+        
+    new_dict = {}
+    for key, value in d.items():
+        # Convert tuple keys to strings
+        if isinstance(key, tuple):
+            
+            new_key = '.'.join(map(str, key)) # Serialize tuple as a JSON string
+        else:
+            new_key = key
+
+        # Recurse into nested dictionaries
+        if isinstance(value, dict):
+            new_dict[new_key] = make_json_compatible(value)
+        else:
+            new_dict[new_key] = value
+
+    return new_dict
+
+json_compatible_data = make_json_compatible(calculations)
 with open(outfile, 'w') as json_file:
-    json.dump(calculations, json_file, indent=4) 
+    
+    json.dump(json_compatible_data, json_file, indent=4) 
 print(os.getcwd())
 print(outfile,' written')
